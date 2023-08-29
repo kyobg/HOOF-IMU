@@ -1,9 +1,15 @@
 # Hoof-IMU Motion Analysis - Senior Design Project
 
+**Preface:** Here are a couple links to help familiarize yourself with Git and GitHub.
+
+Links: (1) https://youtu.be/USjZcfj8yxE?si=m7MtrsjsvbkFWDZs  (2) https://www.youtube.com/watch?v=nhNq2kIvi9s&ab_channel=ColtSteele
+
 ## Terminology:
 
 **IMU** - Inertial Measurement Unit
+
 **DOF** - Degrees of Freedom
+
 **Laminitis** - The inflammation of the laminae of the foot, which results in extreme pain and instability in horses.
 
 ## Project Synopsis:
