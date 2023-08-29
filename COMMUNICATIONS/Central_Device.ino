@@ -1,7 +1,8 @@
 /**************************************************************************
  * Author: Kyle Garcia                                                    *
  *                                                                        *
- * Title: Data Receiver using CLIENT Libraries                            *
+ * Title: Central Device                                                  *
+ * Description: Data Receiver using CLIENT Libraries for BLE Comms        *
  *                                                                        *
  * Purpose: To collect information from BLE Servers, which are the IMUs,  *
  * then output them into MATLAB for processing                            *
