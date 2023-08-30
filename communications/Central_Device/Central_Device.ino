@@ -10,6 +10,8 @@
 
 /*>>>>>>>>>>>>>>>>>>>>>>>>>>>>> LIBRARIES <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
 
+// I am adding a comment here
+
 #include <Wire.h>
 #include <bluefruit.h>
 //#include <Adafruit_LittleFS.h>
