@@ -11,7 +11,7 @@
 /*>>>>>>>>>>>>>>>>>>>>>>>>>>>>> LIBRARIES <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
 
 // I am adding a comment here
-
+#include <Arduino.h>
 #include <Wire.h>
 #include <bluefruit.h>
 //#include <Adafruit_LittleFS.h>
