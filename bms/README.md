@@ -11,7 +11,10 @@ Battery Management System is a critical component in modern battery-powered syst
 - Cell Protection
 
 ## Battery we are using 
-Voltage = 3.7 
+Voltage = 3.7 v 
+capacity = 650mAh 
+capacity = 1500mAh 
+
  
 
 ## Estimated components 
