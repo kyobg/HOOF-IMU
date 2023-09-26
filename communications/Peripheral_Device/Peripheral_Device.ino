@@ -6,7 +6,7 @@
   Filters
   High Speed I2C
   Raw Data
-  .
+
 
 */
 
