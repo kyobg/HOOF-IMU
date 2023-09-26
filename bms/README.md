@@ -10,15 +10,25 @@ Battery Management System is a critical component in modern battery-powered syst
 - Overcurrent and Overvoltage Protection
 - Cell Protection
 
+## Proportional Integral Derivative (PID)
+![life span of battery](https://github.com/kyobg/HOOF-IMU/assets/36013919/a3071c1a-da8e-4cce-9595-820515983791)
+
+![charging](https://github.com/kyobg/HOOF-IMU/assets/36013919/96a500ca-c5c3-40d7-a2a9-d44409b84368)
+
+
+
+
 ## Battery we are using 
 Voltage = 3.7 v 
 capacity = 650mAh 
-capacity = 1500mAh 
+capacity = 1500mAh
+An individual LiPo cell has a nominal voltage of 3.7V. When fully charged you will see nearly 4.3V on the cell but it will quickly drop to 3.7V under normal use. When depleted, the cell will be around 3V. This means your project will need to handle various voltages if you are running directly from a cell.
+![voltage chart](https://github.com/kyobg/HOOF-IMU/assets/36013919/e90b3180-10ce-41d2-8d92-0f7e760d44b7)
 
- 
 
 ## Theoretical components 
 ![image](https://github.com/kyobg/HOOF-IMU/assets/36013919/32105fca-ccde-4b90-add7-348e40dd0f3c)
+
 
 
 
