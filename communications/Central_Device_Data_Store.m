@@ -17,7 +17,7 @@ serialportlist("all");
 % using Line Feed and Carry Return.
 
 dataArray = {};
-serialportObj = serialport("COM3",9600);
+serialportObj = serialport("COM3",115200);
 configureTerminator(serialportObj,"CR/LF");
 
 % Utilization of a callback function that uses a terminator to define a new
@@ -37,5 +37,5 @@ function newDataPt(serialportObj,file,~)
     dataArray = str2double(dataArrayString)';
     fprintf(data1);
     fprintf('\n');
-    writematrix(dataArray, 'DataSample3.csv','Delimiter',',','WriteMode','append');
+    writematrix(dataArray, 'DataSample4.csv','Delimiter',',','WriteMode','append');
 end

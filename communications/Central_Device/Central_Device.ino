@@ -31,7 +31,7 @@ typedef struct
   BLEClientUart bleuart; // Each prph needs its own bleuart client service
   //bool PACKET_FULL;
   uint16_t counter;
-  int16_t newPacket[14];
+  int16_t newPacket[13];
 } prph_info_t;
 
 prph_info_t prphs[BLE_MAX_CONNECTION];
@@ -180,7 +180,7 @@ void bleuart_rx_callback(BLEClientUart& uart_svc)
   if ( uart_svc.available() )
   {
     // default MTU with an extra byte for string terminator <- CHANGED.
-    char buf[28];
+    char buf[26];
     int16_t packetSize = sizeof(buf);
     int16_t bytes = uart_svc.read(buf, packetSize);
     int16_t sentPacketSize = packetSize >> 1;
@@ -198,7 +198,9 @@ void bleuart_rx_callback(BLEClientUart& uart_svc)
       Serial.print(peer->newPacket[i]);
       Serial.print('\t');
     }
-    Serial.print(peer->newPacket[13]);
+    Serial.print(peer->newPacket[12]);
+
+    
     Serial.println();
     //peer->PACKET_FULL = 0;
   }

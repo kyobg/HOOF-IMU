@@ -77,8 +77,8 @@ struct mag_data_t
    sfe_ism_raw_data_t   accelData; 
    sfe_ism_raw_data_t   gyroData;     //sets of 3 int16_t vars.
    mag_data_t           magData;
-   char header_1MSB;
-   char header_1LSB;
+   //char header_1MSB;
+   //char header_1LSB;
    AxesRaw_t            high_g_data;
  };
  
@@ -97,8 +97,8 @@ void setup(void)
 {
   data.allData.headerMSB = '%';
   data.allData.headerLSB = '%';
-  data.allData.header_1MSB = '?';
-  data.allData.header_1LSB = '?';
+  //data.allData.header_1MSB = '?';
+  //data.allData.header_1LSB = '?';
   pinMode(interrupt_pin, INPUT);
   
   h3lis.init();
