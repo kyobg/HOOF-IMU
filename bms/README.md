@@ -7,8 +7,6 @@ Battery Management System is a critical component in modern battery-powered syst
 - Cell Balancing
 - State of Charge (SOC) Estimation
 - State of Health (SOH) Estimation
-
-
 - Overcurrent and Overvoltage Protection
 - Cell Protection
 
