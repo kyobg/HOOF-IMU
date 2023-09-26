@@ -45,7 +45,7 @@ Components
 Update first test pending due to DATA cable, code compiles but doesn't run (COM PORT issue)
 
 
-<img src="[https://github.com/kyobg/HOOF-IMU/assets/36013919/fcc911b9-fe59-40ce-9c5e-247d3c363624](https://github.com/kyobg/HOOF-IMU/assets/36013919/f7ea6fc0-9b91-4a8e-8a02-d296959e3888) " width="400">
+<img src="https://github.com/kyobg/HOOF-IMU/assets/36013919/f7ea6fc0-9b91-4a8e-8a02-d296959e3888" width="400">
 
 
 <img src="https://github.com/kyobg/HOOF-IMU/assets/36013919/fcc911b9-fe59-40ce-9c5e-247d3c363624 " width="400">
