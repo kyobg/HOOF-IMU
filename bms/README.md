@@ -17,21 +17,20 @@ capacity = 1500mAh
 
  
 
-## Estimated components 
+## Theoretical components 
+![image](https://github.com/kyobg/HOOF-IMU/assets/36013919/32105fca-ccde-4b90-add7-348e40dd0f3c)
 
 
 
 
 ## Monitoring test  ( using SparkFun battery babysitter) 
-
-
-## Monitoring test 2 ( using IN219) 
-
-Components 
 BQ24075 x 1
 USB C x 1
-Variety of SMD Resistors x 17
-Variety of SMD capacitors x 5
+
+## Monitoring test 2 ( using IN219) 
+![Measure_PCV_IN219](https://github.com/kyobg/HOOF-IMU/assets/36013919/2514611c-c6ba-4a68-a966-0f0bcee958d8)
+
+Components 
 
 Update first test pending due to DATA cable, code compiles but doesn't run (COM PORT issue)
 
