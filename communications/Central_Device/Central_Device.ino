@@ -180,7 +180,7 @@ void bleuart_rx_callback(BLEClientUart& uart_svc)
   if ( uart_svc.available() )
   {
     // default MTU with an extra byte for string terminator <- CHANGED.
-    char buf[26];
+    char buf[30];
     int16_t packetSize = sizeof(buf);
     int16_t bytes = uart_svc.read(buf, packetSize);
     int16_t sentPacketSize = packetSize >> 1;
@@ -189,17 +189,18 @@ void bleuart_rx_callback(BLEClientUart& uart_svc)
       data[k] = (buf[k+k]) | (buf[(k+k)+1]<<8);
     }
 
-  if (data[0] == 9509) {
+  if (data[0] == 9509)  //'%''%'
+  {
     // Print sender's name
     //Serial.printf("[From %s]: ", peer->name);
     data[0] = peer->connection_handle; // this will return the 
+    
     for (int i = 0; i < sentPacketSize-1; i++){
       peer->newPacket[i] = data[i];
       Serial.print(peer->newPacket[i]);
       Serial.print('\t');
     }
-    Serial.print(peer->newPacket[12]);
-
+    Serial.print(peer->newPacket[sentPacketSize-1]);
     
     Serial.println();
     //peer->PACKET_FULL = 0;
@@ -254,4 +255,3 @@ void loop()
     //char buf[24] = { 0 };
   }
 }
-

@@ -1,4 +1,4 @@
- 
+nf, 
  /*
  * Kevin Brannan
   Combined Funcitonality:
@@ -60,6 +60,7 @@ uint32_t rawValueX = 0;
 uint32_t rawValueY = 0;
 uint32_t rawValueZ = 0;
 
+unsigned long
 struct mag_data_t
 {
   uint16_t scaledX;
@@ -73,6 +74,7 @@ struct mag_data_t
    //uint16_t packetCounter1;
    char headerMSB;
    char headerLSB;
+   uint32_t milliseconds;
    // Structs for X,Y,Z data
    sfe_ism_raw_data_t   accelData; 
    sfe_ism_raw_data_t   gyroData;     //sets of 3 int16_t vars.
@@ -249,8 +251,8 @@ void loop(){
   while(!digitalRead(mag_int_pin))
   {yield;}    //wait for the int!
 
-  myMag.clearMeasDoneInterrupt(); // Clear the MMC5983 interrupt
-
+  myMag.clearMeasDoneInterrupt();                               // Clear the MMC5983 interrupt
+  data.allData.milliseconds = millis();                         // uint32_t overflows at 49 days, uint16_t would overflow at 65.5 seconds.
   myMag.readFieldsXYZ(&rawValueX, &rawValueY, &rawValueZ);
   
   data.allData.magData.scaledX = rawValueX >> 2;
