@@ -31,7 +31,7 @@ typedef struct
   BLEClientUart bleuart; // Each prph needs its own bleuart client service
   //bool PACKET_FULL;
   uint16_t counter;
-  int16_t newPacket[13];
+  int16_t newPacket[30];    // Oversized for future expansion
 } prph_info_t;
 
 prph_info_t prphs[BLE_MAX_CONNECTION];
@@ -189,18 +189,17 @@ void bleuart_rx_callback(BLEClientUart& uart_svc)
       data[k] = (buf[k+k]) | (buf[(k+k)+1]<<8);
     }
 
-  if (data[0] == 9509)  //'%''%'
-  {
+  if (data[0] == 9509) {
     // Print sender's name
     //Serial.printf("[From %s]: ", peer->name);
     data[0] = peer->connection_handle; // this will return the 
-    
     for (int i = 0; i < sentPacketSize-1; i++){
       peer->newPacket[i] = data[i];
       Serial.print(peer->newPacket[i]);
       Serial.print('\t');
     }
     Serial.print(peer->newPacket[sentPacketSize-1]);
+
     
     Serial.println();
     //peer->PACKET_FULL = 0;
