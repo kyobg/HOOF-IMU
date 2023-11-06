@@ -1,4 +1,3 @@
-nf, 
  /*
  * Kevin Brannan
   Combined Funcitonality:
@@ -60,7 +59,7 @@ uint32_t rawValueX = 0;
 uint32_t rawValueY = 0;
 uint32_t rawValueZ = 0;
 
-unsigned long
+
 struct mag_data_t
 {
   uint16_t scaledX;
@@ -71,16 +70,14 @@ struct mag_data_t
 
  struct all_data_t
  {  
-   //uint16_t packetCounter1;
    char headerMSB;
    char headerLSB;
-   uint32_t milliseconds;
+   uint16_t millisecondsMSB;
+   uint16_t millisecondsLSB; 
    // Structs for X,Y,Z data
    sfe_ism_raw_data_t   accelData; 
    sfe_ism_raw_data_t   gyroData;     //sets of 3 int16_t vars.
    mag_data_t           magData;
-   //char header_1MSB;
-   //char header_1LSB;
    AxesRaw_t            high_g_data;
  };
  
@@ -88,7 +85,7 @@ const int union_size = sizeof(all_data_t);
 
 union bitPacket_t{
   all_data_t allData;
- int16_t buf[union_size];
+  int16_t buf[union_size];
 };
 bitPacket_t data; 
 
@@ -99,8 +96,7 @@ void setup(void)
 {
   data.allData.headerMSB = '%';
   data.allData.headerLSB = '%';
-  //data.allData.header_1MSB = '?';
-  //data.allData.header_1LSB = '?';
+
   pinMode(interrupt_pin, INPUT);
   
   h3lis.init();
@@ -252,7 +248,9 @@ void loop(){
   {yield;}    //wait for the int!
 
   myMag.clearMeasDoneInterrupt();                               // Clear the MMC5983 interrupt
-  data.allData.milliseconds = millis();                         // uint32_t overflows at 49 days, uint16_t would overflow at 65.5 seconds.
+  uint32_t timenow = millis();                                           // uint32_t overflows at 49 days, uint16_t would overflow at 65.5 seconds.
+  data.allData.millisecondsMSB = timenow >> 16;                      
+  data.allData.millisecondsLSB = timenow & 0x0000FFFF;
   myMag.readFieldsXYZ(&rawValueX, &rawValueY, &rawValueZ);
   
   data.allData.magData.scaledX = rawValueX >> 2;
@@ -306,7 +304,6 @@ void loop(){
       Serial.print("\t");
     }
     Serial.println();
-
   
 }
 
