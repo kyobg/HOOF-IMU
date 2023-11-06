@@ -248,9 +248,9 @@ int findConnHandle(uint16_t conn_handle)
 
 void loop()
 {  // First check if we are connected to any peripherals
-  if ( Bluefruit.Central.connected() )
-  {
-    // default MTU with an extra byte for string terminator
-    //char buf[24] = { 0 };
-  }
+  // if ( Bluefruit.Central.connected() )
+  // {
+  //   // default MTU with an extra byte for string terminator
+  //   //char buf[24] = { 0 };
+  // }
 }
