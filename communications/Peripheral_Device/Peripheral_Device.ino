@@ -1,12 +1,10 @@
- /*
+  /*
  * Kevin Brannan
   Combined Funcitonality:
   //DR Interrupt
   Filters
   High Speed I2C
   Raw Data
-
-
 */
 
 #include <Wire.h>
@@ -34,7 +32,8 @@ BLECharacteristic myCharacteristic;
 const uint16_t BATTERY_CAPACITY = 650;      //battery capacity in mAh.
 const uint16_t TERMINATE_VOLTAGE = 3000;    //lowest operational voltage in mV.
 const uint16_t TAPER_CURRENT = 12;          //Control charging rate. this is the lowest value.
-
+const int PERCENTAGE_INTERVAL = 1;
+#define GPOUT_PIN D2
 /////////////////////////////////////////////////////////////////////
 //Magnetometer (from sensor hub example)
 
@@ -106,6 +105,7 @@ void setup(void)
   data.allData.headerLSB = '%';
 
   pinMode(interrupt_pin, INPUT);
+  pinMode(GPOUT_PIN, INPUT);   //For BMS change of state.
   
   h3lis.init();
   
@@ -125,8 +125,11 @@ void setup(void)
     {
         Serial.println("BMS: Writing gauge config");
 
-        lipo.enterConfig();                 // To configure the values below, you must be in config mode
-        lipo.setCapacity(BATTERY_CAPACITY); // Set the battery capacity
+        lipo.enterConfig();                     // To configure the values below, you must be in config mode
+        lipo.setCapacity(BATTERY_CAPACITY);     // Set the battery capacity
+        lipo.setGPOUTPolarity(LOW);             // Set GPOUT to active-low
+        lipo.setGPOUTFunction(SOC_INT);         // Set GPOUT to SOC_INT mode
+        lipo.setSOCIDelta(PERCENTAGE_INTERVAL); // Set percentage change integer.
         lipo.setDesignEnergy(BATTERY_CAPACITY * 3.7f);
         lipo.setTerminateVoltage(TERMINATE_VOLTAGE);
         lipo.setTaperRate(10 * BATTERY_CAPACITY / TAPER_CURRENT);
@@ -136,6 +139,14 @@ void setup(void)
     {
         Serial.println("BMS: Using existing gauge config");
     }
+
+    // Use lipo.GPOUTPolarity to read from the chip and confirm the changes
+    if (lipo.GPOUTPolarity())
+      Serial.println("BMS GPOUT set to active-HIGH");
+    else
+      Serial.println("BMS GPOUT set to active-LOW");
+
+    Serial.println("BMS SOCI Delta: " + String(lipo.sociDelta()));
     
 ///////////////////////////////////////////////////////////////////////////
 
@@ -281,7 +292,14 @@ void setup(void)
 
 
 void loop(){
+  if (digitalRead(GPOUT_PIN) == LOW)
+  {
+      printBatteryStats();    // SOC_INT occurred. Print battery stats.
+      blebas.notify(lipo.soc());      //State of charge: Current battery level as %.
+      
+  }
 
+  
   while(!digitalRead(mag_int_pin))
   {yield;}    //wait for the int!
 
