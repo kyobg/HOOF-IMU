@@ -13,6 +13,7 @@
 #include "SparkFun_ISM330DHCX.h"
 #include <SparkFun_MMC5983MA_Arduino_Library.h>
 #include <H3LIS331DL.h>
+#include <SparkFunBQ27441.h>
 
 //For BLE:
 #include <bluefruit.h>
@@ -27,6 +28,13 @@ BLEBas  blebas;  // battery
 BLECharacteristic myCharacteristic;
 
 #define PACKET_SIZE 30
+
+/////////////////////////////////////////////////////////////////////
+// BMS System
+const uint16_t BATTERY_CAPACITY = 650;      //battery capacity in mAh.
+const uint16_t TERMINATE_VOLTAGE = 3000;    //lowest operational voltage in mV.
+const uint16_t TAPER_CURRENT = 12;          //Control charging rate. this is the lowest value.
+
 /////////////////////////////////////////////////////////////////////
 //Magnetometer (from sensor hub example)
 
@@ -104,7 +112,31 @@ void setup(void)
   Serial.begin(115200);   
   Wire.begin();
   Wire.setClock(400000);
+  delay(3000);
+  Serial.println("STARTUP ROUTINE");
+///////////////////////////////////////////////////////////////////////////
+  if (!lipo.begin())
+  {
+      // If communication fails, print an error message and loop forever.
+      Serial.println("Error: Unable to communicate with BMS.");
+      delay(5000);
+  }
+  if (lipo.itporFlag()) //write config parameters only if needed
+    {
+        Serial.println("BMS: Writing gauge config");
 
+        lipo.enterConfig();                 // To configure the values below, you must be in config mode
+        lipo.setCapacity(BATTERY_CAPACITY); // Set the battery capacity
+        lipo.setDesignEnergy(BATTERY_CAPACITY * 3.7f);
+        lipo.setTerminateVoltage(TERMINATE_VOLTAGE);
+        lipo.setTaperRate(10 * BATTERY_CAPACITY / TAPER_CURRENT);
+        lipo.exitConfig(); // Exit config mode to save changes
+    }
+    else
+    {
+        Serial.println("BMS: Using existing gauge config");
+    }
+    
 ///////////////////////////////////////////////////////////////////////////
 
   Bluefruit.autoConnLed(true);
@@ -145,8 +177,13 @@ void setup(void)
   
   // Start BLE Battery Service
   blebas.begin();
-  blebas.write(100);    //Current battery level.
-
+  
+  blebas.write(lipo.soc());    //State of charge: Current battery level as %.
+  blebas.notify(lipo.soc());
+  
+  Serial.println("BATTERY STATUS:");
+  printBatteryStats();
+  
   // Set up and start advertising
   startAdv();
 
@@ -154,7 +191,7 @@ void setup(void)
   
   if( !myISM.begin() )
   {
-    Serial.println("Did not begin.");
+    Serial.println("6dof ISM Did not begin.");
     while(1);
   }
 
@@ -167,7 +204,7 @@ void setup(void)
     yield();
   } 
 
-  Serial.println("Reset.");
+  Serial.println("6dof ISM Reset.");
   delay(100);
   
   myISM.setDeviceConfig();
@@ -180,12 +217,13 @@ void setup(void)
 
     if (myMag.begin() == false)
     {
-        Serial.println("MMC5983MA did not respond - check your wiring. Freezing.");
+        Serial.println("MAGNETOMETER did not respond - check your wiring. Freezing.");
         while (true);
     }
 
     myMag.softReset();
-    
+
+    Serial.print("TEMP: ");
     Serial.println(myMag.getTemperature());
     
     myMag.setFilterBandwidth(100);    //800, 400, 200 or 100.
@@ -287,9 +325,7 @@ void loop(){
 */
 
   //myCharacteristic.notify(&data.buf, union_size);                 // Set characteristic message, and notify client
-  //data.allData.high_g_data.AXIS_X = 0xEE;
-  //data.allData.high_g_data.AXIS_Y = 0xEE;
-  //data.allData.high_g_data.AXIS_Z = 0xEE;
+
   size_t len = bleuart.write((const char *)&data.buf, union_size);
   Serial.print(len);
   Serial.print("\t");
@@ -394,4 +430,43 @@ void disconnect_callback(uint16_t conn_handle, uint8_t reason)
   Serial.print("Disconnected, reason = 0x"); Serial.println(reason, HEX);
 
   bleuart.flush();
+}
+
+
+
+void printBatteryStats()
+{
+    // Read battery stats from the BQ27441-G1A
+    unsigned int soc = lipo.soc();                   // Read state-of-charge (%)
+    unsigned int volts = lipo.voltage();             // Read battery voltage (mV)
+    int current = lipo.current(AVG);                 // Read average current (mA)
+    unsigned int fullCapacity = lipo.capacity(FULL); // Read full capacity (mAh)
+    unsigned int capacity = lipo.capacity(REMAIN);   // Read remaining capacity (mAh)
+    int power = lipo.power();                        // Read average power draw (mW)
+    int health = lipo.soh();                         // Read state-of-health (%)
+
+    // Assemble a string to print
+    String toPrint = "[" + String(millis() / 1000) + "] ";
+    toPrint += String(soc) + "% | ";
+    toPrint += String(volts) + " mV | ";
+    toPrint += String(current) + " mA | ";
+    toPrint += String(capacity) + " / ";
+    toPrint += String(fullCapacity) + " mAh | ";
+    toPrint += String(power) + " mW | ";
+    toPrint += String(health) + "%";
+
+    //fast charging allowed
+    if (lipo.chgFlag())
+        toPrint += " CHG";
+
+    //full charge detected
+    if (lipo.fcFlag())
+        toPrint += " FC";
+
+    //battery is discharging
+    if (lipo.dsgFlag())
+        toPrint += " DSG";
+
+    // Print the string
+    Serial.println(toPrint);
 }
