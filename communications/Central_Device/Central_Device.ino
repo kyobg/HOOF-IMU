@@ -10,7 +10,6 @@
 
 /*>>>>>>>>>>>>>>>>>>>>>>>>>>>>> LIBRARIES <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
 
-// I am adding a comment here
 #include <Arduino.h>
 #include <Wire.h>
 #include <bluefruit.h>
@@ -29,6 +28,7 @@ typedef struct
   char name[16+1];
   uint16_t connection_handle;
   BLEClientUart bleuart; // Each prph needs its own bleuart client service
+  BLEClientBas blebas;
   //bool PACKET_FULL;
   uint16_t counter;
   int16_t newPacket[30];    // Oversized for future expansion
@@ -55,6 +55,9 @@ void setup() {
 
       // All of the BLE Central UART Service
       prphs[index].bleuart.begin();
+      prphs[index].blebas.setNotifyCallback(bas_notify_callback);
+      prphs[index].blebas.begin();
+
       prphs[index].bleuart.setRxCallback(bleuart_rx_callback);
   }
       // Callbacks for Central
@@ -116,14 +119,31 @@ void connect_callback(uint16_t conn_handle)
   Serial.println(peer->name);
   
   Serial.print("Discovering BLE UART service ... ");
+  
+  if (peer->blebas.discover(conn_handle))
+  {
+    Serial.println("THE BATTERY LEVEL IS: ");
+    Serial.println(blebas.read());
+    delay(2000);
+  }
+  else 
+  {
+    Serial.println("Battery Not discovered");
+  }
+  if(peer->blebas.enableNotify())
+  {
+    Serial.println("BAS Notify enabled.");
+  }
+  else
+  {
+    Serial.println("BAS Notify fail!");
+  }
 
   if ( peer->bleuart.discover(conn_handle) )
   {
     Serial.println("Found it");
     Serial.println("Enabling TXD characteristic's CCCD notify bit");
     peer->bleuart.enableTXD();
-    //Bluefruit.Connection(conn_handle)->requestDataLengthUpdate();
-    //Bluefruit.Connection(conn_handle)->requestMtuExchange(30);
     Serial.println("Continue scanning for more peripherals");
     Bluefruit.Scanner.start(0);
 
@@ -192,7 +212,7 @@ void bleuart_rx_callback(BLEClientUart& uart_svc)
   if (data[0] == 9509) {
     // Print sender's name
     //Serial.printf("[From %s]: ", peer->name);
-    data[0] = peer->connection_handle; // this will return the 
+    data[0] = peer->connection_handle;
     for (int i = 0; i < sentPacketSize-1; i++){
       peer->newPacket[i] = data[i];
       Serial.print(peer->newPacket[i]);
@@ -205,27 +225,6 @@ void bleuart_rx_callback(BLEClientUart& uart_svc)
     //peer->PACKET_FULL = 0;
   }
   }
-
-  /*
-  if (data[0] == 16191) {
-    for (int i = 1; i < 4; i++){
-      peer->newPacket[i+9] = data[i]; 
-    }
-    peer->PACKET_FULL = 1;
-  }
-  }
-
-
-  if (peer->PACKET_FULL) {
-    for (int j = 0; j < 12; j++){
-      Serial.print(peer->newPacket[j]);
-      Serial.print("\t");
-      peer->PACKET_FULL = 0;
-    }
-    Serial.print(peer->newPacket[12]);
-    Serial.println();
-  }
-  */
 }
 
 /**
@@ -246,11 +245,21 @@ int findConnHandle(uint16_t conn_handle)
   return -1;  
 }
 
+void bas_notify_callback(BLEClientCharacteristic* chr, uint8_t* data, uint16_t len)
+{
+  //uint8_t value[len];
+  Serial.print("\t***BAS NOTIFY CALLBACK***\t");
+  
+  for(int i=0;i<len;i++)
+  {
+    Serial.print(data[i], DEC);
+  }
+  //Serial.write(data,len);   //This is translates the bytes to ascii for some reason. so 80 = 'P'.
+
+  Serial.println('%');
+}
+
 void loop()
-{  // First check if we are connected to any peripherals
-  // if ( Bluefruit.Central.connected() )
-  // {
-  //   // default MTU with an extra byte for string terminator
-  //   //char buf[24] = { 0 };
-  // }
+{
+
 }
