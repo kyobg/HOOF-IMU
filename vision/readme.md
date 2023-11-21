@@ -1,4 +1,4 @@
-![Logo](Assets/Images/Horse.png)
+![Logo](../Assets/Images/Horse.png)
 # This Section of the Repository is for the IMU PROJECT - Vision section
 
 This Repo will contains the development of the Computer Vision Aspect of this project
