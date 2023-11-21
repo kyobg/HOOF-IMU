@@ -23,9 +23,7 @@ BLEDfu  bledfu;  // OTA DFU service
 BLEDis  bledis;  // device information
 BLEUart bleuart; // uart over ble
 BLEBas  blebas;  // battery
-BLECharacteristic myCharacteristic;
-
-#define PACKET_SIZE 30
+//BLECharacteristic myCharacteristic;
 
 /////////////////////////////////////////////////////////////////////
 // BMS System
@@ -33,7 +31,9 @@ const uint16_t BATTERY_CAPACITY = 650;      //battery capacity in mAh.
 const uint16_t TERMINATE_VOLTAGE = 3000;    //lowest operational voltage in mV.
 const uint16_t TAPER_CURRENT = 12;          //Control charging rate. this is the lowest value.
 const int PERCENTAGE_INTERVAL = 1;
+uint32_t lasttime = 0;
 #define GPOUT_PIN D2
+#define BAS_TIME_INTERVAL 5000 
 /////////////////////////////////////////////////////////////////////
 //Magnetometer (from sensor hub example)
 
@@ -105,7 +105,7 @@ void setup(void)
   data.allData.headerLSB = '%';
 
   pinMode(interrupt_pin, INPUT);
-  pinMode(GPOUT_PIN, INPUT);   //For BMS change of state.
+  //pinMode(GPOUT_PIN, INPUT);   //For BMS change of state.
   
   h3lis.init();
   
@@ -113,7 +113,7 @@ void setup(void)
   Wire.begin();
   Wire.setClock(400000);
   delay(3000);
-  Serial.println("STARTUP ROUTINE");
+  Serial.println("STARTUP ROUTINE");    // Usually does not print. Serial comms is async and maybe gets clobbered in the soft device startup. 
 ///////////////////////////////////////////////////////////////////////////
   if (!lipo.begin())
   {
@@ -125,15 +125,16 @@ void setup(void)
     {
         Serial.println("BMS: Writing gauge config");
 
-        lipo.enterConfig();                     // To configure the values below, you must be in config mode
-        lipo.setCapacity(BATTERY_CAPACITY);     // Set the battery capacity
-        lipo.setGPOUTPolarity(LOW);             // Set GPOUT to active-low
-        lipo.setGPOUTFunction(SOC_INT);         // Set GPOUT to SOC_INT mode
-        lipo.setSOCIDelta(PERCENTAGE_INTERVAL); // Set percentage change integer.
-        lipo.setDesignEnergy(BATTERY_CAPACITY * 3.7f);
-        lipo.setTerminateVoltage(TERMINATE_VOLTAGE);
-        lipo.setTaperRate(10 * BATTERY_CAPACITY / TAPER_CURRENT);
-        lipo.exitConfig(); // Exit config mode to save changes
+  //Advanced config settings are untested. Using defaults if commented out.
+        //lipo.enterConfig();                     // To configure the values below, you must be in config mode. 
+        lipo.setCapacity(BATTERY_CAPACITY);       // Set the battery capacity
+        //lipo.setGPOUTPolarity(LOW);             // Set GPOUT to active-low
+        //lipo.setGPOUTFunction(SOC_INT);         // Set GPOUT to SOC_INT mode
+        //lipo.setSOCIDelta(PERCENTAGE_INTERVAL); // Set percentage change integer.
+        //lipo.setDesignEnergy(BATTERY_CAPACITY * 3.7f);
+        //lipo.setTerminateVoltage(TERMINATE_VOLTAGE);
+        //lipo.setTaperRate(10 * BATTERY_CAPACITY / TAPER_CURRENT);
+        //lipo.exitConfig(); // Exit config mode to save changes
     }
     else
     {
@@ -141,12 +142,12 @@ void setup(void)
     }
 
     // Use lipo.GPOUTPolarity to read from the chip and confirm the changes
-    if (lipo.GPOUTPolarity())
-      Serial.println("BMS GPOUT set to active-HIGH");
-    else
-      Serial.println("BMS GPOUT set to active-LOW");
-
-    Serial.println("BMS SOCI Delta: " + String(lipo.sociDelta()));
+//    if (lipo.GPOUTPolarity())
+//      Serial.println("BMS GPOUT set to active-HIGH");
+//    else
+//      Serial.println("BMS GPOUT set to active-LOW");
+//
+//    Serial.println("BMS SOCI Delta: " + String(lipo.sociDelta()));
     
 ///////////////////////////////////////////////////////////////////////////
 
@@ -188,10 +189,6 @@ void setup(void)
   
   // Start BLE Battery Service
   blebas.begin();
-  
-  blebas.write(lipo.soc());    //State of charge: Current battery level as %.
-  blebas.notify(lipo.soc());
-  
   Serial.println("BATTERY STATUS:");
   printBatteryStats();
   
@@ -292,12 +289,12 @@ void setup(void)
 
 
 void loop(){
-  if (digitalRead(GPOUT_PIN) == LOW)
-  {
-      printBatteryStats();    // SOC_INT occurred. Print battery stats.
-      blebas.notify(lipo.soc());      //State of charge: Current battery level as %.
-      
-  }
+//  if (digitalRead(GPOUT_PIN) == LOW)
+//  {
+//      printBatteryStats();    // SOC_INT occurred. Print battery stats.
+//      blebas.notify(lipo.soc());      //State of charge: Current battery level as %.
+//      
+//  }
 
   
   while(!digitalRead(mag_int_pin))
@@ -313,7 +310,12 @@ void loop(){
   data.allData.magData.scaledY = rawValueY >> 2;
   data.allData.magData.scaledZ = rawValueZ >> 2;
 
-
+  if( (timenow - lasttime) > BAS_TIME_INTERVAL )
+  {
+    printBatteryStats();          // Print battery stats locally.
+    blebas.notify(lipo.soc());    //State of charge: Current battery level as %.
+    lasttime = timenow;
+  }
               
   // Check if both gyroscope and accelerometer data is available.
   if( myISM.checkStatus() )
@@ -360,9 +362,6 @@ void loop(){
     Serial.println();
   
 }
-
-
-
 
 
 
