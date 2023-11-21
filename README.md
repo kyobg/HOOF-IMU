@@ -36,3 +36,11 @@ The IMUs will communicate directly to a central hub through a BLE mesh, which wi
 - Create custom BLE Service/Characteristics?
 - Optimize power consumption
 - Complete PCB design with integrated circuits and order appropriate chips
+
+
+## Authors
+[Kyle G](https://github.com/kyobg)
+[Kevin B](https://github.com/kevinbrannan)
+[Elena M](https://github.com/evolutis101)
+[Jonathan H](https://github.com/Grlee316)
+
