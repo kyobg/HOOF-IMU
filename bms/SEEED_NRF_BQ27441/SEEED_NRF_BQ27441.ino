@@ -1,6 +1,6 @@
 
 /******************************************************************************
-BQ27441_Basic
+BQ27441_Basic.
 BQ27441 Library Basic Example
 Jim Lindblom @ SparkFun Electronics
 May 9, 2016
