@@ -4,9 +4,9 @@
 
 Links: 
 
-(1) How to use Git: https://youtu.be/USjZcfj8yxE?si=m7MtrsjsvbkFWDZs  
+(1) How to use Git click [here](https://youtu.be/USjZcfj8yxE?si=m7MtrsjsvbkFWDZs)  
 
-(2) How to use GitHub: https://www.youtube.com/watch?v=nhNq2kIvi9s&ab_channel=ColtSteele
+(2) How to use GitHub click [here](https://www.youtube.com/watch?v=nhNq2kIvi9s&ab_channel=ColtSteele)
 
 ## Terminology:
 
@@ -46,4 +46,5 @@ The IMUs will communicate directly to a central hub through a BLE mesh, which wi
 [Elena M](https://github.com/evolutis101)
 
 [Jonathan H](https://github.com/Grlee316)
+
 
