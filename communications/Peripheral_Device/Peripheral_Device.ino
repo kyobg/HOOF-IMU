@@ -1,19 +1,20 @@
   /*
  * Kevin Brannan
+ * Kyle Garcia
   Combined Funcitonality:
-  //DR Interrupt
+  Data Rate (DR) Interrupt
   Filters
   High Speed I2C
-  Raw Data
+  Raw Data, No Conversions
 */
 
 #include <Wire.h>
-#include "SparkFun_ISM330DHCX.h"
-#include <SparkFun_MMC5983MA_Arduino_Library.h>
-#include <H3LIS331DL.h>
-#include <SparkFunBQ27441.h>
+#include "src/SparkFun_ISM330DHCX.h"                        // 6 Degree-of-Freedom (6DOF) Accel + Gyro Library
+#include "src/SparkFun_MMC5983MA_Arduino_Library.h"         // Magnetometer Library
+#include "src/SparkFun_LIS331.h"                            // 3-Axis High G Accelerometer Library
+#include "src/SparkFunBQ27441.h"                            // Battery Management System Library
 
-//For BLE:
+//For Bluetooth Low Energy (BLE):
 #include <bluefruit.h>
 #include <Adafruit_LittleFS.h>
 #include <InternalFileSystem.h>
@@ -23,7 +24,6 @@ BLEDfu  bledfu;  // OTA DFU service
 BLEDis  bledis;  // device information
 BLEUart bleuart; // uart over ble
 BLEBas  blebas;  // battery
-//BLECharacteristic myCharacteristic;
 
 /////////////////////////////////////////////////////////////////////
 // BMS System
@@ -34,6 +34,7 @@ const int PERCENTAGE_INTERVAL = 1;
 uint32_t lasttime = 0;
 #define GPOUT_PIN D2
 #define BAS_TIME_INTERVAL 5000 
+
 /////////////////////////////////////////////////////////////////////
 //Magnetometer (from sensor hub example)
 
@@ -46,19 +47,19 @@ uint32_t lasttime = 0;
 #define MAG_READ_REG 0x00 // Read from 0x00
 #define MAG_READ_LEN 0x07 // Read seven times consecutively
 
-// INT_CTRL0 (0x09) - contains the bit to initiate measurement. 
-// It must be written before each read and is cleared automatically.
 #define MAG_WRITE_REG 0x09 
 #define MAG_WRITE_DATA 0x01 // Value to write to INT_CTRL0 
 
 /////////////////////////////////////////////////////////////////////
-//ISM330 Accel + Gyro
+//ISM330 Accel + Gyro (6DOF)
 #define interrupt_pin D0
 #define mag_int_pin   D1
 
+/////////////////////////////////////////////////////////////////////
+
 SparkFun_ISM330DHCX myISM; 
 SFE_MMC5983MA myMag; 
-H3LIS331DL h3lis;
+LIS331 myLis;
 
 //From standalone lib example
 volatile bool newDataAvailable = true;
@@ -66,6 +67,10 @@ uint32_t rawValueX = 0;
 uint32_t rawValueY = 0;
 uint32_t rawValueZ = 0;
 
+// for high g read
+int16_t rawAccelX = 0;
+int16_t rawAccelY = 0;
+int16_t rawAccelZ = 0;
 
 struct mag_data_t
 {
@@ -74,27 +79,33 @@ struct mag_data_t
   uint16_t scaledZ;
 };
 
+struct accel_high_data_t
+{
+  uint16_t X;
+  uint16_t Y;
+  uint16_t Z;  
+};
 
  struct all_data_t
  {  
-   char headerMSB;
-   char headerLSB;
-   uint16_t millisecondsMSB;
-   uint16_t millisecondsLSB; 
+   char headerMSB;                            // Packet Identifier
+   char headerLSB;                            // Packet Identifier
+   uint16_t millisecondsMSB;                  // Time High
+   uint16_t millisecondsLSB;                  // Time Low
    // Structs for X,Y,Z data
-   sfe_ism_raw_data_t   accelData; 
-   sfe_ism_raw_data_t   gyroData;     //sets of 3 int16_t vars.
-   mag_data_t           magData;
-   AxesRaw_t            high_g_data;
+   sfe_ism_raw_data_t   accelData;            // Low-g Accelerometer Raw Data
+   sfe_ism_raw_data_t   gyroData;             // Gyroscope Raw Data
+   mag_data_t           magData;              // Magnetometer Raw Data
+   accel_high_data_t    high_g_data;          // High-g Accelerometer Raw Data
  };
  
-const int union_size = sizeof(all_data_t);
+const int union_size = sizeof(all_data_t);    // Size of the struct for union
 
 union bitPacket_t{
   all_data_t allData;
-  int16_t buf[union_size];
+  int16_t buf[union_size];                    // The union allocates space equal to the amount of data +  the size of the data as an array of int16_t
 };
-bitPacket_t data; 
+bitPacket_t data;                             // Union referred to as data from this point on
 
 
 ////////////////////////////////////////////////////////////////
@@ -104,15 +115,17 @@ void setup(void)
   data.allData.headerMSB = '%';
   data.allData.headerLSB = '%';
 
+  
   pinMode(interrupt_pin, INPUT);
-  //pinMode(GPOUT_PIN, INPUT);   //For BMS change of state.
-  
-  h3lis.init();
-  
+
   Serial.begin(115200);   
   Wire.begin();
   Wire.setClock(400000);
   delay(3000);
+  myLis.setI2CAddr(0x19);                   // This must be called before .begin()
+  myLis.setODR(LIS331::DR_100HZ);                   // Sample at 100 Hz
+  myLis.setFullScale(LIS331::LOW_RANGE);           // HIGH_RANGE sets to 400g
+  myLis.begin(LIS331::USE_I2C);             // Uses I2C rather than SPI
   Serial.println("STARTUP ROUTINE");    // Usually does not print. Serial comms is async and maybe gets clobbered in the soft device startup. 
 ///////////////////////////////////////////////////////////////////////////
   if (!lipo.begin())
@@ -202,7 +215,7 @@ void setup(void)
     Serial.println("6dof ISM Did not begin.");
     while(1);
   }
-
+  
   // Reset the device to default settings. This if helpful is you're doing multiple
   // uploads testing different settings. 
   myISM.deviceReset();
@@ -266,14 +279,6 @@ void setup(void)
 
   myISM.setAccelStatustoInt1();
   
-  //myISM.setAccelStatustoInt2();
-
-  // We can just as easily set the gyroscope's data read signal to either interrupt
-
-  //myISM.setGyroStatustoInt1();
-  //myISM.setGyroStatustoInt2();
-  
-  
   // Uncommenting the function call below will change the interrupt to 
   // active LOW instead of HIGH.
 
@@ -300,7 +305,7 @@ void loop(){
   while(!digitalRead(mag_int_pin))
   {yield;}    //wait for the int!
 
-  myMag.clearMeasDoneInterrupt();                               // Clear the MMC5983 interrupt
+  myMag.clearMeasDoneInterrupt();                                        // Clear the MMC5983 interrupt
   uint32_t timenow = millis();                                           // uint32_t overflows at 49 days, uint16_t would overflow at 65.5 seconds.
   data.allData.millisecondsMSB = timenow >> 16;                      
   data.allData.millisecondsLSB = timenow & 0x0000FFFF;
@@ -320,29 +325,16 @@ void loop(){
   // Check if both gyroscope and accelerometer data is available.
   if( myISM.checkStatus() )
   {
-    myISM.getRawAccel(&data.allData.accelData);
-    myISM.getRawGyro(&data.allData.gyroData);
-    h3lis.getAccAxesRaw(&data.allData.high_g_data);   //HIGH_G
+    myISM.getRawAccel(&data.allData.accelData);                 // Low-g
+    myISM.getRawGyro(&data.allData.gyroData);                   // Gyroscope
+    myLis.readAxes(rawAccelX, rawAccelY, rawAccelZ);         // High-g
+    data.allData.high_g_data.X = (uint16_t) rawAccelX;
+    data.allData.high_g_data.Y = (uint16_t) rawAccelY;
+    data.allData.high_g_data.Z = (uint16_t) rawAccelZ;
   }
 
 
 //PRINT STATEMENTS.
-
-
-
-/*
-  for(int i=0;i < union_size>>1; i++)
-  {
-    String str = String(data.buf[i]);
-    int str_length = str.length();
-    char buff[str_length + 1];
-    str.toCharArray(buff, str_length + 1);
-    
-    bleuart.write(buff,sizeof(buff));    //mag data is supposed to be unsigned and will not look correct.
-    bleuart.write(";");     //("\t");
-  }
-  bleuart.write("\n");
-*/
 
   //myCharacteristic.notify(&data.buf, union_size);                 // Set characteristic message, and notify client
 
