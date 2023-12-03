@@ -24,18 +24,13 @@ The IMUs will communicate directly to a central hub through a BLE mesh, which wi
 
 
 ## Goals:
-- Test with mobile battery pack
-- Add Timestamp to periph data packet
-- Distance/Reliablility measurement
-- Serial Port overflow?
-- Complete IMU data collection design
-- Complete power management system
-- Complete real-time plotting using ~~KST2~~ Python and BetterSerialMonitor
-- Integrate GPS into the IMU system. (stretch)
-- ~~Implement RTC~~ (no longer sound)
-- Create custom BLE Service/Characteristics?
-- Optimize power consumption
-- Complete PCB design with integrated circuits and order appropriate chips
+- Test with mobile battery pack:                                                      Check
+- Add Timestamp to periphal data packet:                                              Check
+- Distance/Reliablility measurement:                                                  Check, ~40 ft
+- Complete power management system:                                                   Check
+- Complete real-time plotting using BetterSerialMonitor:                              Check
+- Integrate GPS into the IMU system:                                                  No Longer Feasbile due to Time Constraints
+- Complete PCB design with integrated circuits and order appropriate chips:           Future Goal
 
 
 ## Authors
