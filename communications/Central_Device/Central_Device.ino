@@ -1,5 +1,5 @@
 /**************************************************************************
- * Author: Kyle Garcia                                                    *
+ * Author: Kyle Garcia, Kevin Brannan                                                    *
  *                                                                        *
  * Title: Central Device                                                  *
  * Description: Data Receiver using CLIENT Libraries for BLE Comms        *
@@ -213,16 +213,12 @@ void bleuart_rx_callback(BLEClientUart& uart_svc)
     // Print sender's name
     //Serial.printf("[From %s]: ", peer->name);
     data[0] = peer->connection_handle;
-    for (int i = 0; i < sentPacketSize-1; i++){
+    for (int i = 0; i < sentPacketSize; i++){
       peer->newPacket[i] = data[i];
       Serial.print(peer->newPacket[i]);
       Serial.print('\t');
     }
-    Serial.print(peer->newPacket[sentPacketSize-1]);
-
-    
     Serial.println();
-    //peer->PACKET_FULL = 0;
   }
   }
 }
