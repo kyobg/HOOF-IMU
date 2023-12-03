@@ -124,7 +124,7 @@ void setup(void)
   delay(3000);
   myLis.setI2CAddr(0x19);                   // This must be called before .begin()
   myLis.setODR(LIS331::DR_100HZ);                   // Sample at 100 Hz
-  myLis.setFullScale(LIS331::LOW_RANGE);           // HIGH_RANGE sets to 400g
+  myLis.setFullScale(LIS331::MED_RANGE);           // LOW_RANGE = 100g, MED_RANGE = 200g, HIGH_RANGE = 400g
   myLis.begin(LIS331::USE_I2C);             // Uses I2C rather than SPI
   Serial.println("STARTUP ROUTINE");    // Usually does not print. Serial comms is async and maybe gets clobbered in the soft device startup. 
 ///////////////////////////////////////////////////////////////////////////
