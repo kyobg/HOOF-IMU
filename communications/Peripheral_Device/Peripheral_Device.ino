@@ -33,7 +33,7 @@ const uint16_t TAPER_CURRENT = 12;          //Control charging rate. this is the
 const int PERCENTAGE_INTERVAL = 1;
 uint32_t lasttime = 0;
 #define GPOUT_PIN D2
-#define BAS_TIME_INTERVAL 5000 
+#define BAS_TIME_INTERVAL 60000 
 
 /////////////////////////////////////////////////////////////////////
 //Magnetometer (from sensor hub example)
