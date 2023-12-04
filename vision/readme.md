@@ -39,6 +39,6 @@ Improvements and Targets:\
 [&check;] Better color masking\
 [&check;] Blob Analysis to minimize other objects\
 [&cross;] Minimize the missing hoof masking (less mask perhaps)\
-[_] Cleaner skeleton with only main line showings\
-[_] Overlay the skeleton with lines to have a thicker and better skeletons\
-[_] Writing the video output as a file for ease of use\
+[ ] Cleaner skeleton with only main line showings\
+[ ] Overlay the skeleton with lines to have a thicker and better skeletons\
+[ ] Writing the video output as a file for ease of use\
