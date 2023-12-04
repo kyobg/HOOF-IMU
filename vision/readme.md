@@ -36,9 +36,9 @@ Morphology is a broad set of image processing operations that process images bas
 ===========================================================================
 
 Improvements and Targets:
-- [x] Better color masking
-- [x] Blob Analysis to minimize other objects
-- [&check;] Minimize the missing hoof masking (less mask perhaps)
+[&check;] Better color masking
+[&check;] Blob Analysis to minimize other objects
+[&cross;] Minimize the missing hoof masking (less mask perhaps)
 - [ ] Cleaner skeleton with only main line showings
 - [ ] Overlay the skeleton with lines to have a thicker and better skeletons
 - [ ] Writing the video output as a file for ease of use
