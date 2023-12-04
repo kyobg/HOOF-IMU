@@ -62,3 +62,9 @@ Improvements and Targets:\
 
 [&emsp;] Overlay the skeleton with lines to have a thicker and better skeletons\
 [&emsp;] Writing the video output as a file for ease of use
+
+===========================================================================
+
+Notes:
+- This project is based on [Image Processing Toolbox](https://www.mathworks.com/products/image.html) on MATLAB. In order to make this project to work properly, you would need to download the Image Processing Toolbox from MATLAB and install it on your computer.
+
