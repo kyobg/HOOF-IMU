@@ -35,6 +35,7 @@ Morphology is a broad set of image processing operations that process images bas
 
 ===========================================================================
 
+```html
 Improvements and Targets:\
 [&check;] Better color masking\
 [&check;] Blob Analysis to minimize other objects\
@@ -44,3 +45,4 @@ Improvements and Targets:\
 <span style="color:red;"> **Reason:** > </span>  We tried to clean the middle section of the skeleton so it will only contain "longer" lines, but apparently the center lines consisted of dashed lines, such that it will be impossible to create one long lines. I tried a different method to create longer lines (to combine the lines in the torso part of the horse) and it created a wrong output (undesired result).\
 [&emsp;] Overlay the skeleton with lines to have a thicker and better skeletons\
 [&emsp;] Writing the video output as a file for ease of use
+```
