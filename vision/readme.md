@@ -19,7 +19,7 @@ Current Mask:
 [Mask 6](../vision/latestDev/createMask6.m)
 
 
-For more information of the MATLAB functions that are being used, please check the links below\
+### For more information of the MATLAB functions that are being used, please check the links below
 ================================================================
 
 Information in regards of the MATLAB function being used for this project, their brief description, and help link to matlab help in alphabetical order:
@@ -51,7 +51,7 @@ Morphology is a broad set of image processing operations that process images bas
 
 ================================================================
 
-Improvements and Targets:\
+### Improvements and Targets:
 **Done:**\
 [&check;] Better color masking\
 [&check;] Blob Analysis to minimize other objects\
@@ -69,6 +69,6 @@ Improvements and Targets:\
 
 ================================================================
 
-Notes:
+*** Notes:
 - This project is based on [Image Processing Toolbox](https://www.mathworks.com/products/image.html) on MATLAB. In order to make this project to work properly, you would need to download the Image Processing Toolbox from MATLAB and install it on your computer.
 
