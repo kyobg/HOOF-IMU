@@ -2,8 +2,24 @@
 # This Section of the Repository is for the IMU PROJECT - Vision section
 
 This Repo will contains the development of the Computer Vision Aspect of this project
-For more information of the MATLAB functions that are being used, please check the links below
 
+Before Blob Analysis:
+![WithoutBlob](../Assets/Images/withoutBlob.png)
+
+After Blob Analysis:
+![Blob](../Assets/Images/Blob_Example.png)
+![Blob2](../Assets/Images/Blob_Example2.png)
+
+Notice that before the blob analysis, we encounter a lot of noise, since the color difference method is not perfect in essence (it will also read some other colors that the image/video contains, so not everything is isolated). The blob analysis will analyze the image/video and will eliminate "smaller blobs", such that we have an isolated image of the bigger blobs since we tailored our color masking to the color of the horse itself. 
+
+Our current progress is located at:
+[Horse 3](../vision/latestDev/horse_test3.m)
+
+Current Mask:
+[Mask 6](../vision/latestDev/createMask6.m)
+
+
+For more information of the MATLAB functions that are being used, please check the links below\
 ===========================================================================
 
 Information in regards of the MATLAB function being used for this project, their brief description, and help link to matlab help in alphabetical order:
