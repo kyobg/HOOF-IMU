@@ -3,6 +3,13 @@
 
 This Repo will contains the development of the Computer Vision Aspect of this project
 
+We created mask using the color thresholder application on MATLAB. We took a screenshoot from the video given and then use the application in MATLAB to create a mask. After the creation of the mask, we then apply the mask to the video by processing the video frame by frame. By doing so we processing an "image" such that we could apply these masks. 
+
+Creating Mask:
+![mask6](../Assets/Images/HV6_M1.png)
+
+After applying the mask created, we then use the blob analysis as pictured below. 
+
 Before Blob Analysis:
 ![WithoutBlob](../Assets/Images/withoutBlob.png)
 
