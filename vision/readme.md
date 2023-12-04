@@ -5,21 +5,27 @@ This Repo will contains the development of the Computer Vision Aspect of this pr
 
 We created mask using the color thresholder application on MATLAB. We took a screenshoot from the video given and then use the application in MATLAB to create a mask. After the creation of the mask, we then apply the mask to the video by processing the video frame by frame. By doing so we processing an "image" such that we could apply these masks. 
 
-Creating Mask:
+**Creating Mask:**
 ![mask6](../Assets/Images/HV6_M1.png)
 
 After applying the mask created, we then use the blob analysis as pictured below. 
 
-Before Blob Analysis:
+**Before Blob Analysis:**
 ![WithoutBlob](../Assets/Images/withoutBlob.png)
 
-After Blob Analysis:
+**After Blob Analysis:**
 ![Blob](../Assets/Images/Blob_Example.png)
 ![Blob2](../Assets/Images/Blob_Example2.png)
 
 Notice that before the blob analysis, we encounter a lot of noise, since the color difference method is not perfect in essence (it will also read some other colors that the image/video contains, so not everything is isolated). The blob analysis will analyze the image/video and will eliminate "smaller blobs", such that we have an isolated image of the bigger blobs since we tailored our color masking to the color of the horse itself. 
 
-Our current progress is located at:
+**Overlaying largest blob to our image / video frame:**
+![OverlayedBlob](../Assets/Images/largestBlobOverlay.png)
+
+when then uses the skel feature of bwmorph matlab function to get the "skeleton":**
+![skeletonOverlay](../Assets/Images/skeletonOverlay.png)
+
+**Our current progress is located at:**
 [Horse 3](../vision/latestDev/horse_test3.m)
 
 Current Mask:
@@ -76,6 +82,6 @@ Morphology is a broad set of image processing operations that process images bas
 
 ================================================================
 
-*** Notes:
+### Notes:
 - This project is based on [Image Processing Toolbox](https://www.mathworks.com/products/image.html) on MATLAB. In order to make this project to work properly, you would need to download the Image Processing Toolbox from MATLAB and install it on your computer.
 
