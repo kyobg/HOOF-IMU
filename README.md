@@ -24,13 +24,13 @@ The IMUs will communicate directly to a central hub through a BLE mesh, which wi
 
 
 ## Goals:
-- [x]  Test with mobile battery pack:                                                      
-- [x]  Add Timestamp to periphal data packet:                                              
-- [x]  Distance/Reliablility measurement:                                                  ~40 ft
-- [x]  Complete power management system:                                                   
-- [x]  Complete real-time plotting using BetterSerialMonitor:                              
-- [ ]  Integrate GPS into the IMU system:                                                  No Longer Feasbile due to Time Constraints
-- [ ]  Complete PCB design with integrated circuits and order appropriate chips:           Future Goal
+- [x]  Test with mobile battery pack                                                      
+- [x]  Add Timestamp to periphal data packet                                              
+- [x]  Distance/Reliablility measurement                                                  ~40 ft
+- [x]  Complete power management system                                                   
+- [x]  Complete real-time plotting using BetterSerialMonitor                              
+- [ ]  Integrate GPS into the IMU system                                                  No Longer Feasbile due to Time Constraints
+- [ ]  Complete PCB design with integrated circuits and order appropriate chips           Future Goal
 
 
 ## Authors
