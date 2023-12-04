@@ -39,8 +39,8 @@ Improvements and Targets:\
 [&check;] Better color masking\
 [&check;] Blob Analysis to minimize other objects\
 [&cross;] Minimize the missing hoof masking (less mask perhaps)\
-<span style="color:red;">**Reason:**></span> We tried to apply different masks from the other videos that we have, but seems like the best mask is the mask from video6, hence the name of the mask itself is called createMask6\
+<span style="color:red;"> **Reason:** > </span> We tried to apply different masks from the other videos that we have, but seems like the best mask is the mask from video6, hence the name of the mask itself is called createMask6\
 [&cross;] Cleaner skeleton with only main line showings\
-<span style="color:red;">**Reason:**></span>  We tried to clean the middle section of the skeleton so it will only contain "longer" lines, but apparently the center lines consisted of dashed lines, such that it will be impossible to create one long lines. I tried a different method to create longer lines (to combine the lines in the torso part of the horse) and it created a wrong output (undesired result).\
+<span style="color:red;"> **Reason:** > </span>  We tried to clean the middle section of the skeleton so it will only contain "longer" lines, but apparently the center lines consisted of dashed lines, such that it will be impossible to create one long lines. I tried a different method to create longer lines (to combine the lines in the torso part of the horse) and it created a wrong output (undesired result).\
 [&emsp;] Overlay the skeleton with lines to have a thicker and better skeletons\
 [&emsp;] Writing the video output as a file for ease of use
