@@ -33,13 +33,24 @@ The IMUs will communicate directly to a central hub through a BLE mesh, which wi
 - [ ]  Complete PCB design with integrated circuits and order appropriate chips           Future Goal
 
 
-## Authors
-[Kyle G](https://github.com/kyobg)
+## Current Repository Maintainer and Authors
+Kyle G:
+- [GitHub](https://github.com/kyobg)
+- [LinkedIn](https://www.linkedin.com/in/kyle-b-garcia/)
 
-[Kevin B](https://github.com/kevinbrannan)
+Kevin B:
+- [GitHub](https://github.com/kevinbrannan)
+- [LinkedIn](https://www.linkedin.com/in/kevin-brannan-885446233/)
 
-[Elena M](https://github.com/evolutis101)
+Elena M:
+- [GitHub](https://github.com/evolutis101)
+- [LinkedIn](https://www.linkedin.com/in/elenammontalvo/)
 
-[Jonathan H](https://github.com/Grlee316)
+Jonathan H:
+- [GitHub](https://github.com/Grlee316)
+- [LinkedIn](https://www.linkedin.com/in/jhanbali/)
 
-
+## Future Repository Maintainer
+Josue D:
+- [Github](https://github.com/Jdiazcaminos)
+- [LinkedIn](https://www.linkedin.com/in/josuediaz-caminos/)
