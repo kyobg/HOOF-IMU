@@ -3,7 +3,7 @@ clear all
 close all
 warning off
 
-c = VideoReader('Horse-5.mp4');
+c = VideoReader('Horse-1.mp4');
 c.CurrentTime = 0.5;
 
 allSkelD = []; % To accumulate the results
